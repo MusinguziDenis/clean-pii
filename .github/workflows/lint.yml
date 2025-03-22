@@ -19,4 +19,4 @@ jobs:
     - name: Run ruff
       run: ruff check --fix .
     - name: Run mypy
-      run: mypy train_yolo_models.py
+      run: mypy inference train clean datasets
