@@ -19,3 +19,5 @@ lacuna_combined_runs.tar.gz
 x-ray-od-annotations.csv
 results
 test/__pycache__
+clean/__pycache__
+inference/__pycache__
