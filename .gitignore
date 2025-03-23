@@ -18,3 +18,4 @@ yolo_dataset.zip
 lacuna_combined_runs.tar.gz
 x-ray-od-annotations.csv
 results
+test/__pycache__
