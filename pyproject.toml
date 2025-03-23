@@ -37,7 +37,6 @@ line-length = 100
 select = ["E", "F", "I"]
 
 
-
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 python_files = ["test_*.py"]
