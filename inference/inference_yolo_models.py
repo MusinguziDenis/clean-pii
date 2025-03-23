@@ -9,15 +9,14 @@ from torch import nn
 from ultralytics import YOLO
 
 
-def yolo_predict(model:nn.Module, img_paths:list) -> pd.DataFrame:
+def yolo_predict(model:nn.Module, img_paths:list) -> list[dict]:
     """Predicts bounding boxes on images using a YOLO model.
 
     Args:
         model (nn.Module): YOLO model
         img_paths (List): List of image paths to predict on
     Returns:
-        pd.DataFrame: DataFrame containing
-            ['Image_ID', 'class', 'confidence', 'ymin', 'xmin', 'ymax', 'xmax']
+        list[dict]: List of dictionaries containing predictions
 
     """
     tta_preds = []
@@ -27,7 +26,7 @@ def yolo_predict(model:nn.Module, img_paths:list) -> pd.DataFrame:
         image = cv2.imread(image_dir)
 
         predictions = model(
-            image, conf=0.2, device="cpu", verbose=False, augment=False,
+            image, conf=0.4, device="cpu", verbose=False, augment=False,
             )
 
         final_predictions = []
@@ -69,11 +68,4 @@ def yolo_predict(model:nn.Module, img_paths:list) -> pd.DataFrame:
 
         tta_preds += final_predictions
 
-    return pd.DataFrame(tta_preds)
-
-
-if __name__ == "__main__":
-    yolon_model = YOLO("phi_models/best.pt")
-    image_paths = glob("yolo/images/*.png")
-    results = yolo_predict(yolon_model, image_paths)
-    results.to_csv("results.csv", index=False)
+    return tta_preds

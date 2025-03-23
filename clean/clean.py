@@ -20,7 +20,7 @@ def clean_image(image_path: str, boxes: list[dict[str, int]], output_dir: str) -
     image_id = Path(image_path).name
 
     for box in boxes:
-        x1, y1, x2, y2 = box["xmin"], box["ymin"], box["xmax"], box["ymax"]
+        x1, y1, x2, y2 = int(box["xmin"]), int(box["ymin"]), int(box["xmax"]), int(box["ymax"])
         image[y1:y2, x1:x2] = 0
 
     cv2.imwrite(Path(output_dir)/image_id, image)
