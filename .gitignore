@@ -21,3 +21,7 @@ results
 test/__pycache__
 clean/__pycache__
 inference/__pycache__
+cleandicom.ipynb
+DICOM-TIFF format.zip
+DICOM-TIFF format
+out.dcm

@@ -6,12 +6,13 @@ from PIL import Image
 from ultralytics import YOLO
 
 
-def yolo_predict(model:YOLO, img_paths:list) -> list[dict]:
+def yolo_predict(model:YOLO, img_paths:list, device: str) -> list[dict]:
     """Predicts bounding boxes on images using a YOLO model.
 
     Args:
         model (nn.Module): YOLO model
         img_paths (List): List of image paths to predict on
+        device (str): Device to run the model on
     Returns:
         list[dict]: List of dictionaries containing predictions
 
@@ -23,7 +24,7 @@ def yolo_predict(model:YOLO, img_paths:list) -> list[dict]:
         image = np.array(image)
 
         predictions = model(
-            image, conf=0.4, device="cpu", verbose=False, augment=False,
+            image, conf=0.4, device=device, verbose=False, augment=False,
             )
 
         final_predictions = []
