@@ -5,25 +5,25 @@
 from pathlib import Path
 
 import cv2
+from PIL import Image
 
 
-def clean_image(image_path: str, boxes: list[dict[str, int]], output_dir: str) -> None:
+def clean_image(image: Image.Image, boxes: list[dict[str, int]]) -> None:
     """Clean PII from an image.
 
     Args:
-        image_path (str): Path to the image
+        image (Image): Numpy array of the image
         boxes (List[Dict[str, int]]): List of bounding boxes
-        output_dir (str): Output directory
 
     """
-    image = cv2.imread(image_path)
-    image_id = Path(image_path).name
+    # image = cv2.imread(image_path)
+    # image_id = Path(image_path).name
 
     for box in boxes:
         x1, y1, x2, y2 = int(box["xmin"]), int(box["ymin"]), int(box["xmax"]), int(box["ymax"])
         image[y1:y2, x1:x2] = 0
 
-    cv2.imwrite(Path(output_dir)/image_id, image)
+    return image
 
 
 if __name__ == "__main__":

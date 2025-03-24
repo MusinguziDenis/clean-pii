@@ -1,12 +1,10 @@
 
-from pathlib import Path
-from glob import glob
 
 import cv2
-import pandas as pd
+import numpy as np
 import tqdm
+from PIL import Image
 from torch import nn
-from ultralytics import YOLO
 
 
 def yolo_predict(model:nn.Module, img_paths:list) -> list[dict]:
@@ -22,8 +20,8 @@ def yolo_predict(model:nn.Module, img_paths:list) -> list[dict]:
     tta_preds = []
 
     for image_dir in tqdm.tqdm(img_paths, desc="predicting with YOLO"):
-        image_id = image_dir.split("/")[-1]
-        image = cv2.imread(image_dir)
+        image = Image.open(image_dir)
+        image = cv2.cvtColor(np.array(image), cv2.COLOR_RGB2BGR)
 
         predictions = model(
             image, conf=0.4, device="cpu", verbose=False, augment=False,
@@ -43,7 +41,6 @@ def yolo_predict(model:nn.Module, img_paths:list) -> list[dict]:
 
                 final_predictions.append(
                     {
-                        "Image_ID": image_id,
                         "class": class_name,
                         "confidence": conf,
                         "ymin": ymin,
@@ -56,7 +53,6 @@ def yolo_predict(model:nn.Module, img_paths:list) -> list[dict]:
             if len(boxes) == 0:
                 final_predictions.append(
                     {
-                        "Image_ID": image_id,
                         "class": "NEG",
                         "confidence": 0,
                         "ymin": 0,
