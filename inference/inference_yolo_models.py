@@ -1,13 +1,12 @@
 
 
-import cv2
 import numpy as np
 import tqdm
 from PIL import Image
-from torch import nn
+from ultralytics import YOLO
 
 
-def yolo_predict(model:nn.Module, img_paths:list) -> list[dict]:
+def yolo_predict(model:YOLO, img_paths:list) -> list[dict]:
     """Predicts bounding boxes on images using a YOLO model.
 
     Args:
@@ -20,8 +19,8 @@ def yolo_predict(model:nn.Module, img_paths:list) -> list[dict]:
     tta_preds = []
 
     for image_dir in tqdm.tqdm(img_paths, desc="predicting with YOLO"):
-        image = Image.open(image_dir)
-        image = cv2.cvtColor(np.array(image), cv2.COLOR_RGB2BGR)
+        image = Image.open(image_dir).convert("RGB")
+        image = np.array(image)
 
         predictions = model(
             image, conf=0.4, device="cpu", verbose=False, augment=False,

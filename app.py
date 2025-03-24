@@ -1,6 +1,6 @@
+# Description: This file contains the Flask app that will be used to serve the model.
 from io import BytesIO
 
-import cv2
 import numpy as np
 from flask import Flask, jsonify, request, send_file
 from PIL import Image
@@ -11,6 +11,9 @@ from inference.inference_yolo_models import yolo_predict
 
 app = Flask(__name__)
 
+# Load the model once the app starts
+model = YOLO("phi_models/best.pt")
+
 @app.route("/predict", methods=["POST"])
 def web_clean_image() -> str:
     """Clean PII from an image."""
@@ -18,20 +21,20 @@ def web_clean_image() -> str:
         return jsonify({"error": "No image file provided"}), 400
 
     file = request.files["image"]
-    image = Image.open(file.stream)
-    image = cv2.cvtColor(np.array(image), cv2.COLOR_RGB2BGR)
-
-    model = YOLO("phi_models/best.pt")
+    image = Image.open(file.stream).convert("RGB")
+    image_np = np.array(image)
 
     bboxes = yolo_predict(model, [file.stream])
 
-    image = clean_image(image, bboxes)
+    image_np = clean_image(image_np, bboxes)
 
     # Convert the processed image back to a format that can be sent in the response
-    _, buffer = cv2.imencode(".png", image)
-    image_bytes = BytesIO(buffer).getvalue()
+    processed_image = Image.fromarray(image_np)
+    buffer = BytesIO()
+    processed_image.save(buffer, format="PNG")
+    buffer.seek(0)
 
-    return send_file(BytesIO(image_bytes), mimetype="image/png")
+    return send_file(buffer, mimetype="image/png")
 
 if __name__ == "__main__":
-    app.run(host="127.0.0.1", port=8080)
+    app.run(host="0.0.0.0", port=8080)
