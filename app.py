@@ -1,4 +1,4 @@
-# Description: This file contains the Flask app that will be used to serve the model.
+"""Flask app to remove PII from x-ray images."""
 from io import BytesIO
 
 import numpy as np
@@ -37,4 +37,4 @@ def web_clean_image() -> str:
     return send_file(buffer, mimetype="image/png")
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=8080)
+    app.run(host="127.0.0.1", port=8080)
