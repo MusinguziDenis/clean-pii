@@ -24,7 +24,7 @@ def web_clean_image() -> str:
     image = Image.open(file.stream).convert("RGB")
     image_np = np.array(image)
 
-    bboxes = yolo_predict(model, [file.stream])
+    bboxes = yolo_predict(model, [file.stream], device="cpu")
 
     image_np = clean_image(image_np, bboxes)
 

@@ -25,3 +25,7 @@ cleandicom.ipynb
 DICOM-TIFF format.zip
 DICOM-TIFF format
 out.dcm
+pii-results.tar.gz
+pii-results.tar.gz
+yolo11n.pt
+pii_yolo_dataset.tar.gz

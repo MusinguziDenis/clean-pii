@@ -1,0 +1,12 @@
+version: "3.9"
+
+services:
+  app:
+    image: musinguzidenis/clean-pii-app:latest  # Replace with your Docker Hub image name
+    ports:
+      - "8081:8080"  # Map port 8080 in the container to port 8081 on the host
+    environment:
+      - FLASK_ENV=production  # Set Flask environment to production
+    volumes:
+      - ./logs:/app/logs  # Mount the phi_models directory if needed
+    restart: always  # Ensure the container restarts automatically if it stops

@@ -1,6 +1,6 @@
 amp: true
 auto_augment: false
-batch: 32
+batch: 4
 copy_paste: 0.5724015565785052
 copy_paste_mode: flip
 cos_lr: true
@@ -9,7 +9,7 @@ dfl: 1.1048464720810045
 dropout: 0.1
 #ema_decay_leftover: 0.003287126596792849
 #ema_tau:  200
-epochs: 30
+epochs: 10
 fliplr: 0.0
 flipud: 0.0
 hsv_h: 0.14279391195559032
