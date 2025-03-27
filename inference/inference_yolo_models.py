@@ -21,10 +21,10 @@ def yolo_predict(model:YOLO, img_paths:list, device: str) -> list[dict]:
 
     for image_dir in tqdm.tqdm(img_paths, desc="predicting with YOLO"):
         image = Image.open(image_dir).convert("RGB")
-        image = np.array(image)
+        image_array = np.array(image)
 
         predictions = model(
-            image, conf=0.4, device=device, verbose=False, augment=False,
+            image_array, conf=0.4, device=device, verbose=False, augment=False,
             )
 
         final_predictions = []

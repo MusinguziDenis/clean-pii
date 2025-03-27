@@ -22,8 +22,8 @@ def get_trained_yolo_models(config_files:list[str], dataset_path:str, device:str
     """
     trained_yolo_models = []
     for config_file in config_files:
-        config_file = Path(config_file)
-        with Path.open(config_file, "r") as f:
+        file = Path(config_file)
+        with file.open("r") as f:
             config_dict = dict(yaml.safe_load(f))
 
         model = YOLO(config_dict.pop("model"))

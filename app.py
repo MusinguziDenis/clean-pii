@@ -2,9 +2,10 @@
 from io import BytesIO
 
 import numpy as np
-from flask import Flask, jsonify, request, send_file
+from flask import Flask, jsonify, request, send_file, Response
 from PIL import Image
 from ultralytics import YOLO
+from typing import Union
 
 from clean.clean import clean_image
 from inference.inference_yolo_models import yolo_predict
@@ -15,7 +16,7 @@ app = Flask(__name__)
 model = YOLO("phi_models/best.pt")
 
 @app.route("/predict", methods=["POST"])
-def web_clean_image() -> str:
+def web_clean_image() -> Union[Response, tuple[Response, int]]:
     """Clean PII from an image."""
     if "image" not in request.files:
         return jsonify({"error": "No image file provided"}), 400

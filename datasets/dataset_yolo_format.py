@@ -27,7 +27,7 @@ def save_dataset_in_yolo(image_folder:str, preprocessed_df:pd.DataFrame, output_
     shutil.rmtree(output_dir, ignore_errors=True)
 
     # Create output directory
-    Path.mkdir(output_dir, exist_ok=False, parents=True)
+    Path.mkdir(Path(output_dir), exist_ok=False, parents=True)
 
     # Clear existing directory if it exists
     shutil.rmtree(os.path.join(output_dir, "train"), ignore_errors=True)
@@ -36,7 +36,7 @@ def save_dataset_in_yolo(image_folder:str, preprocessed_df:pd.DataFrame, output_
     pos_df = preprocessed_df[preprocessed_df["Finding Label"] != "NEG"]
 
     # Get unique positive classes and create mapping (excluding NEG)
-    unique_classes = sorted(pos_df["Finding Label"].unique())
+    unique_classes = sorted(pos_df["Finding Label"].unique().tolist())
     class_mapping = {cls: idx for idx, cls in enumerate(unique_classes)}
 
     # Get unique image IDs (excluding images that only have NEG classes)
@@ -44,8 +44,8 @@ def save_dataset_in_yolo(image_folder:str, preprocessed_df:pd.DataFrame, output_
 
     # Create directories
     train_dir = os.path.join(output_dir, "train")
-    Path.mkdir(os.path.join(train_dir, "labels"), exist_ok=True)
-    Path.mkdir(os.path.join(train_dir, "images"), exist_ok=True)
+    Path.mkdir(Path(os.path.join(train_dir, "labels")), exist_ok=True)
+    Path.mkdir(Path(os.path.join(train_dir, "images")), exist_ok=True)
 
     processed_count = 0
     skipped_count = 0
@@ -67,9 +67,9 @@ def save_dataset_in_yolo(image_folder:str, preprocessed_df:pd.DataFrame, output_
 
         # Create label file
         label_filename = f"{''.join(img_name.split('.')[:-1])}.txt"
-        label_path = os.path.join(train_dir, "labels", label_filename)
+        label_path = Path(os.path.join(train_dir, "labels", label_filename))
 
-        with Path.open(label_path, "w+") as f:
+        with label_path.open("w+") as f:
             for _, row in img_boxes.iterrows():
                 # Calculate normalized box dimensions
                 x_center = (row["x"] + row["w"]/2) / imwidth
@@ -85,22 +85,24 @@ def save_dataset_in_yolo(image_folder:str, preprocessed_df:pd.DataFrame, output_
         cv2.imwrite(os.path.join(train_dir, "images", img_name), img)
         processed_count += 1
 
+
     # Save class mapping
-    with Path.open(os.path.join(output_dir, "classes.txt"), "w+") as f:
+    classes_file_path = Path(os.path.join(output_dir, "classes.txt"))
+    with classes_file_path.open("w+") as f:
         for class_name, _ in sorted(class_mapping.items(), key=lambda x: x[1]):
             f.write(f"{class_name}\n")
 
     # Generate dataset.yaml
     yaml_content = {
         "names": {class_mapping[k]: k for k in class_mapping},
-        "path": Path.resolve(output_dir),
+        "path": str(Path(output_dir).resolve()),
         "train": "train",
         "val": "train",
     }
 
     # Save dataset.yaml
-    yaml_path = os.path.join(output_dir, "dataset.yaml")
-    with Path.open(yaml_path, "w") as f:
+    yaml_path = Path(os.path.join(output_dir, "dataset.yaml"))
+    with yaml_path.open("w") as f:
         yaml.dump(yaml_content, f, sort_keys=False)
 
     # Compile statistics

@@ -1,4 +1,4 @@
-
+"""Train negative model"""
 
 
 import pandas as pd
@@ -29,11 +29,11 @@ class NegativeDataset(Dataset):
         self.img_dir = img_dir
         self.transforms = Resize((224, 224)), ToTensor()
 
-    def __len__(self) ->int:
+    def __len__(self) -> int:
         """Return the length of the dataset."""
         return len(self.image_ids)
 
-    def __getitem__(self, idx:int) ->tuple(Image.Image, int):
+    def __getitem__(self, idx:int) -> tuple[Image.Image, int]:
         """Get an item from the dataset."""
         img_path = f"{self.img_dir}/{self.image_ids[idx]}"
         image = Image.open(img_path)
@@ -76,7 +76,7 @@ def train_model(img_dir:str, train_csv:str, epochs:int) ->nn.Module:
     val_loader = DataLoader(val_dataset, batch_size=32)
 
     # Load the pre-trained model
-    model = resnet18(pretrained=True)
+    model: nn.Module = resnet18(pretrained=True)
     model.fc = nn.Linear(model.fc.in_features, 2)
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     model.to(device)
@@ -90,7 +90,7 @@ def train_model(img_dir:str, train_csv:str, epochs:int) ->nn.Module:
         print(f"Epoch {epoch + 1}/{epochs}")
 
         model.train()
-        train_loss = 0
+        train_loss = 0.0
         train_correct = 0
         for images, labels in tqdm(train_loader, desc="Training", leave=False):
             images, labels = images.to(device), labels.to(device)
@@ -109,7 +109,7 @@ def train_model(img_dir:str, train_csv:str, epochs:int) ->nn.Module:
 
         # Validation
         model.eval()
-        val_loss = 0
+        val_loss = 0.0
         val_correct = 0
         with torch.no_grad():
             for images, labels in tqdm(val_loader, desc="Validating", leave=False):
@@ -129,4 +129,4 @@ def train_model(img_dir:str, train_csv:str, epochs:int) ->nn.Module:
 
 
 if __name__ == "__main__":
-    train_model("data/images", "data/negative_samples.csv", epochs=1)
+    model = train_model("data/images", "data/negative_samples.csv", epochs=10)

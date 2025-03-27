@@ -4,15 +4,17 @@ Fills the bounding boxes with white pixels.
 """
 
 
-from PIL import Image
+import numpy as np
 
 
-def clean_image(image: Image.Image, boxes: list[dict[str, int]]) -> None:
+def clean_image(image: np.ndarray, boxes: list[dict[str, int]]) -> np.ndarray:
     """Clean PII from an image.
 
     Args:
-        image (Image): Numpy array of the image
+        image (np.ndarray): Numpy array of the image
         boxes (List[Dict[str, int]]): List of bounding boxes
+    Returns:
+        np.ndarray: Processed image
 
     """
     for box in boxes:
