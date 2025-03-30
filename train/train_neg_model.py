@@ -1,4 +1,4 @@
-"""Train negative model"""
+"""Train negative model."""
 
 
 import pandas as pd
