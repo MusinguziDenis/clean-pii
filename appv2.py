@@ -20,7 +20,7 @@ def web_clean_image() -> Response | tuple[Response, int]:
     file = request.files["image"]
 
     bboxes = yolo_predict(model, [file.stream], device="cpu")
-    all_bboxes = [([bbox["xmin"], bbox["ymin"], bbox["xmax"], bbox["ymax"]])\
+    all_bboxes = [([bbox["xmin"], bbox["ymin"], bbox["xmax"], bbox["ymax"]])
                    for bbox in bboxes]
     all_bboxes = [[round(x, 2) for x in bbox if x > 0] for bbox in all_bboxes]
 

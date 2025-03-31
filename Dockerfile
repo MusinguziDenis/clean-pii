@@ -13,7 +13,7 @@ RUN pip install --upgrade pip
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy only the necessary directories and files into the container
-COPY app.py .
+COPY appv2.py .
 COPY clean/ clean/
 COPY inference/ inference/
 COPY phi_models/ phi_models/
@@ -22,4 +22,4 @@ COPY phi_models/ phi_models/
 EXPOSE 8080
 
 # Define the command to run the application
-CMD ["python", "app.py"]
+CMD ["python", "appv2.py"]
