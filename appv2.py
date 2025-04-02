@@ -22,10 +22,10 @@ def web_clean_image() -> Response | tuple[Response, int]:
     bboxes = yolo_predict(model, [file.stream], device="cpu")
     all_bboxes = [([bbox["xmin"], bbox["ymin"], bbox["xmax"], bbox["ymax"]])
                    for bbox in bboxes]
-    all_bboxes = [[round(x, 2) for x in bbox if x > 0] for bbox in all_bboxes]
+    all_bboxes = [[round(x, 2) for x in bbox] for bbox in all_bboxes]
 
     # Return bounding boxes as JSON
     return jsonify({"bboxes": all_bboxes}), 200
 
 if __name__ == "__main__":
-    app.run(host="127.0.0.1", port=8080)
+    app.run(host="0.0.0.0", port=8080)
