@@ -1,4 +1,4 @@
-
+"""Detect bounding boxes of PII in X-ray images."""
 
 import numpy as np
 import tqdm

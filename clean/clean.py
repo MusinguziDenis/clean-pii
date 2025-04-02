@@ -18,7 +18,8 @@ def clean_image(image: np.ndarray, boxes: list[dict[str, int]]) -> np.ndarray:
 
     """
     for box in boxes:
-        x1, y1, x2, y2 = int(box["xmin"]), int(box["ymin"]), int(box["xmax"]), int(box["ymax"])
+        x1, y1, x2, y2 = int(box["xmin"]), int(box["ymin"]), int(box["xmax"]),\
+                                int(box["ymax"])
         image[y1:y2, x1:x2] = 255
 
     return image
