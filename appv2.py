@@ -2,18 +2,33 @@
 
 
 from flask import Flask, Response, jsonify, request
+from flask_cors import CORS, cross_origin
 from ultralytics import YOLO
 
 from inference.inference_yolo_models import yolo_predict
 
 app = Flask(__name__)
+cors = CORS(app, resources={r"/api/*": {"origins": ["http://localhost:5173",
+                                                    "http://localhost:4173",
+                                                    "http://34.31.76.1:8080",
+                                                    "https://dsi.emergentai.ug"]}},
+                                                    supports_credentials=True,
+                                                    methods=["*"],
+                                                    allow_headers=["*"],
+                                                )
 
 # Load the model once the app starts
 model = YOLO("phi_models/best.pt")
 
 @app.route("/predict", methods=["POST"])
+@cross_origin()
 def web_clean_image() -> Response | tuple[Response, int]:
-    """Clean PII from an image."""
+    """Detect the location of PII.
+
+    Gets the position of PII and returns a bounding box cordinates of the PII
+    in the form [x_min, y_min, x_max, y_max]
+
+    """
     if "image" not in request.files:
         return jsonify({"error": "No image file provided"}), 400
 

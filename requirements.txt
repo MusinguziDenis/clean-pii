@@ -2,4 +2,5 @@ numpy
 Pillow
 ultralytics
 Flask
+flask-cors
 opencv-python
