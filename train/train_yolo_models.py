@@ -8,7 +8,11 @@ from torch import nn
 from ultralytics import YOLO
 
 
-def get_trained_yolo_models(config_files:list[str], dataset_path:str, device:str="cuda") -> list[nn.Module]:
+def get_trained_yolo_models(
+        config_files: list[str],
+        dataset_path: str,
+        device: str="cuda",
+        ) -> list[nn.Module]:
     """Train YOLO models using the specified configuration files and dataset.
 
     Args:
@@ -39,4 +43,7 @@ if __name__ == "__main__":
     config_files = ["yolo11m_config.yaml"]
     dataset_path = "yolo2/dataset.yaml"
     device = "cuda" if torch.cuda.is_available() else "cpu"
-    trained_models = get_trained_yolo_models(config_files, dataset_path, device)
+    trained_models = get_trained_yolo_models(
+        config_files,
+        dataset_path,
+        device)

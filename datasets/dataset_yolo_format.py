@@ -8,7 +8,11 @@ import yaml
 from tqdm import tqdm
 
 
-def save_dataset_in_yolo(image_folder:str, preprocessed_df:pd.DataFrame, output_dir:str) ->dict:
+def save_dataset_in_yolo(
+        image_folder:str,
+        preprocessed_df:pd.DataFrame,
+        output_dir:str,
+        ) ->dict:
     """Convert a dataset into YOLO format and saves it to disk.
 
     Exlude images without bounding boxes.
@@ -16,7 +20,8 @@ def save_dataset_in_yolo(image_folder:str, preprocessed_df:pd.DataFrame, output_
 
     Args:
         image_folder (str): Path to folder containing source images
-        preprocessed_df (pd.DataFrame): DataFrame containing annotations with columns:
+        preprocessed_df (pd.DataFrame): DataFrame containing annotations
+        with columns:
             ['Image Index', 'Finding Label', 'Bbox [x', 'y', 'w', 'h]']
         output_dir (str): Path where the YOLO dataset will be saved
     Returns:
@@ -107,7 +112,8 @@ def save_dataset_in_yolo(image_folder:str, preprocessed_df:pd.DataFrame, output_
 
     # Compile statistics
     stats = {
-        "total_images_before_filtering": len(preprocessed_df["Image Index"].unique()),
+        "total_images_before_filtering": len(
+            preprocessed_df["Image Index"].unique()),
         "total_images_after_filtering": len(image_ids),
         "processed": processed_count,
         "skipped": skipped_count,
@@ -116,13 +122,17 @@ def save_dataset_in_yolo(image_folder:str, preprocessed_df:pd.DataFrame, output_
     }
 
     print("\nDataset generation complete!")
-    print(f"Total images before filtering: {stats['total_images_before_filtering']}")
     print(
-        f"Total images after removing NEG class: {stats['total_images_after_filtering']}",
+        f"Total images before filtering:\
+            {stats['total_images_before_filtering']}",
+        )
+    print(
+        f"Total images after removing NEG class:\
+              {stats['total_images_after_filtering']}",
     )
     print(f"Successfully processed: {stats['processed']}")
     print(f"Skipped: {stats['skipped']}")
-    print(f"Classes: {', '.join(stats['classes'])}")
+    print(f"Classes: {', '.join(stats['classes'])}") # type: ignore[arg-type]
     print(f"Dataset YAML file saved to: {yaml_path}")
 
     return stats

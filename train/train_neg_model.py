@@ -58,7 +58,8 @@ def train_model(img_dir:str, train_csv:str, epochs:int) ->nn.Module:
     # Load data
     train_df = pd.read_csv(train_csv)
 
-    train_negs = train_df[train_df["Finding Label"] == "NEG"]["Image Index"].unique().tolist()
+    train_negs = train_df[train_df["Finding Label"]
+                           == "NEG"]["Image Index"].unique().tolist()
 
     train_ids = train_df["Image Index"].unique().tolist()
 
@@ -105,14 +106,19 @@ def train_model(img_dir:str, train_csv:str, epochs:int) ->nn.Module:
 
         train_loss /= len(train_loader)
         train_accuracy = train_correct / len(train_dataset)
-        print(f"Train Loss: {train_loss:.4f}, Train Accuracy: {train_accuracy:.4f}")
+        print(f"Train Loss: {train_loss:.4f},\
+               Train Accuracy: {train_accuracy:.4f}")
 
         # Validation
         model.eval()
         val_loss = 0.0
         val_correct = 0
         with torch.no_grad():
-            for images, labels in tqdm(val_loader, desc="Validating", leave=False):
+            for images, labels in tqdm(
+                val_loader,
+                desc="Validating",
+                leave=False,
+                ):
                 images, labels = images.to(device), labels.to(device)
                 outputs = model(images)
                 loss = criterion(outputs, labels)
@@ -122,7 +128,8 @@ def train_model(img_dir:str, train_csv:str, epochs:int) ->nn.Module:
         val_loss /= len(val_loader)
         val_accuracy = val_correct / len(val_dataset)
         print(
-            f"Validation Loss: {val_loss:.4f}, Validation Accuracy: {val_accuracy:.4f}",
+            f"Validation Loss: {val_loss:.4f},\
+                  Validation Accuracy: {val_accuracy:.4f}",
         )
 
     return model
